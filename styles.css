@@ -1,0 +1,71 @@
+html, body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+}
+.form {
+  width: 40%;
+  padding: 1rem;
+  box-sizing: border-box;
+  float: left;
+  overflow: scroll;
+}
+.map {
+  width: 70%;
+}
+#viewDiv {
+  height: 100%;
+}
+
+/* Style the input groups */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.input-group input,
+.input-group select {
+  font-size: 16px;
+  padding: 10px;
+  margin: 0;
+  width: 100%;
+  color: #333;
+  background-color: #f7f7f7;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.input-group select {
+  cursor: pointer;
+}
+
+/* Style the submit button */
+#submit-btn {
+  display: block;
+  font-size: 16px;
+  padding: 10px;
+  margin: 20px 0;
+  width: 200px;
+  color: #fff;
+  background-color: #007
+
+}
+.esri-locate {
+  z-index: 999;
+}
