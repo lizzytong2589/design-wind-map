@@ -10,8 +10,8 @@ html, body {
   flex-direction: row;
   height: 100vh;
 }
-.form {
-  width: 45%;
+.form-div {
+  width: 40%;
   padding: 1rem;
   box-sizing: border-box;
   float: left;
