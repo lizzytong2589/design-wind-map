@@ -224,79 +224,13 @@ function calc_winds(countyData, buildYear, riskCat, lifespan, method, units) {
     res.unshift(rows);
 
     if (units === "mph") {
-        for (let i = 4; i < res.length; i++) {
-            for (let j = 0; j < res[i].length; j++) {
-                res[i][j] = (res[i][j] * ms_to_mph).toFixed(2);
-            }
-    }
+      for (let i = 4; i < res.length; i++) {
+          for (let j = 0; j < res[i].length; j++) {
+              res[i][j] = (res[i][j] * ms_to_mph).toFixed(2);
+          }
+      }
     }
 
     console.table(res);
     return(xd)
-
 }
-
-function processForm(event) {
-    event.preventDefault(); // Prevent the form from submitting
-    const form = document.getElementById("form");
-
-    // User Inputs
-    const scenario = document.getElementById("scenario-select");
-    const loc = document.getElementById("fips-input");
-    const lifespan = document.getElementById("lifespan-input");
-    const buildYear = document.getElementById("buildYear-input");
-    const riskCat = document.getElementById("category-select");
-    const method = document.getElementById("method-select");
-    const units = document.getElementById("units-select");
-    const submitBtn = document.getElementById("submit-btn");
-
-    // Get FIPS code from location input
-    var geometryService = new esri.tasks.GeometryService("http://sampleserver6.arcgisonline.com/arcgis/rest/services/Utilities/Geometry/GeometryServer");
-
-    // Set up a new instance of the FeatureLayer to query for counties
-    var countyLayer = new esri.layers.FeatureLayer("http://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer/3");
-
-    // Use the GeometryService to geocode the address and get its point location
-    var geocodeParams = new esri.tasks.GeocodeParameters();
-    geocodeParams.address = { SingleLine: loc };
-    geometryService.geocode(geocodeParams, function(result) {
-      var point = result[0].location;
-
-      // Set up a query to find the county the point is located in
-      var query = new esri.tasks.Query();
-      query.geometry = point;
-      query.spatialRelationship = esri.tasks.Query.SPATIAL_REL_INTERSECTS;
-
-      // Execute the query against the county layer and get the county FIPS code
-      countyLayer.queryFeatures(query, function(featureSet) {
-        var countyFeature = featureSet.features[0];
-        var fipsCode = countyFeature.attributes["STATE_FIPS"] + countyFeature.attributes["COUNTY_FIPS"];
-        console.log("County FIPS code: " + fipsCode);
-        var FIPS = fipsCode
-      });
-    });
-
-
-    // Query
-    featureLayer.setQuery(scenario)
-    var query = new esri.tasks.Query();
-    query.where = "county_fips = " + FIPS;
-    
-    featureLayer.queryFeatures(query, function(featureSet) {
-      // Iterate through the features and do something with each one
-      var features = featureSet.features;
-      for (var i = 0; i < features.length; i++) {
-        var feature = features[i];
-        // Do something with the feature, such as display its attributes or geometry
-        console.log(feature.attributes);
-        console.log(feature.geometry);
-      }
-    });
-    
-    // calc_winds(data, buildYear, riskCat, lifespan, method, units)
-
-
-
-}
-
-

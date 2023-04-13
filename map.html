@@ -5,41 +5,40 @@
   <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Design Wind Speeds</title>
 
-  <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://js.arcgis.com/4.26/esri/themes/light/main.css">
+  <link rel="stylesheet" href="styles.css">
   <script src="https://js.arcgis.com/4.26/"></script>
   <script src="index.js"></script>
-  <script src="calcWinds.js"></script>
+  <!-- <script src="calcWinds.js"></script> -->
   
 </head>
 <body>
   <div class="container">
     <div class="form">
       <h2>Design Wind Speed Calculator</h2>
-      <!-- Get inputs -->
-      <form id="form" onsubmit="processForm(event)">
+      <form id="form" action="">
         <div class="input-group">
           <label for="scenario-select">Emissions Scenario:</label><br>
           <select id="scenario-select">
             <option value="">-- Select --</option>
-            <option value="1">SSP2-4.5</option>
-            <option value="2">SSP5-8.5</option>
+            <option value="1">SSP2-4.5 (Intermediate)</option>
+            <option value="2">SSP5-8.5 (High)</option>
           </select>
         </div>
 
         <div class="input-group">
           <label for="fips-input">Enter the FIPS Code:</label><br>
-          <input type="text" id="fips-input" pattern="\d{5}" placeholder="01001" required>
+          <input type="text" id="fips-input" pattern="\d{5}" placeholder="e.g. 01001" required>
         </div>
 
         <div class="input-group">
           <label for="lifespan-input">Enter the Building Lifetime:</label><br>
-          <input type="number" id="lifespan-input" placeholder=50 required>
+          <input type="number" id="lifespan-input" placeholder="e.g. 50" required>
         </div>
 
         <div class="input-group">
           <label for="year-input">Enter the Year of Construction:</label><br>
-          <input type="number" id="year-input" placeholder=2023 required>
+          <input type="number" id="year-input" placeholder="e.g. 2023" required>
         </div>
 
         <div class="input-group">
@@ -70,9 +69,9 @@
             <option value="cust">Customary</option>
             <option value="si">SI</option>
           </select>
-        </div>
+        </div><br>
 
-        <button id="submit-btn">Submit</button>
+        <button id="submit-btn" type="submit">Submit</button>
       </form>
     </div>
     <!-- Map -->
@@ -80,6 +79,69 @@
       <div id="viewDiv"></div>
     </div>
   </div>
+  <script>
+    let form = document.getElementById("form");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault(); // Prevent the form from submitting
+
+      // User Inputs
+      const scenario = document.getElementById("scenario-select");
+      const loc = document.getElementById("fips-input");
+      const lifespan = document.getElementById("lifespan-input");
+      const buildYear = document.getElementById("buildYear-input");
+      const riskCat = document.getElementById("category-select");
+      const method = document.getElementById("method-select");
+      const units = document.getElementById("units-select");
+      const submitBtn = document.getElementById("submit-btn");
+
+      // // Get FIPS code from location input
+      // var geometryService = new esri.tasks.GeometryService("http://sampleserver6.arcgisonline.com/arcgis/rest/services/Utilities/Geometry/GeometryServer");
+
+      // // Set up a new instance of the FeatureLayer to query for counties
+      // var countyLayer = new esri.layers.FeatureLayer("http://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer/3");
+
+      // // Use the GeometryService to geocode the address and get its point location
+      // var geocodeParams = new esri.tasks.GeocodeParameters();
+      // geocodeParams.address = { SingleLine: loc };
+      // geometryService.geocode(geocodeParams, function(result) {
+      //   var point = result[0].location;
+
+      //   // Set up a query to find the county the point is located in
+      //   var query = new esri.tasks.Query();
+      //   query.geometry = point;
+      //   query.spatialRelationship = esri.tasks.Query.SPATIAL_REL_INTERSECTS;
+
+      //   // Execute the query against the county layer and get the county FIPS code
+      //   countyLayer.queryFeatures(query, function(featureSet) {
+      //     var countyFeature = featureSet.features[0];
+      //     var fipsCode = countyFeature.attributes["STATE_FIPS"] + countyFeature.attributes["COUNTY_FIPS"];
+      //     console.log("County FIPS code: " + fipsCode);
+      //     var FIPS = fipsCode
+      //   });
+      // });
+
+
+      // // Query
+      // featureLayer.setQuery(scenario)
+      // var query = new esri.tasks.Query();
+      // query.where = "county_fips = " + FIPS;
+      
+      // featureLayer.queryFeatures(query, function(featureSet) {
+      //   // Iterate through the features and do something with each one
+      //   var features = featureSet.features;
+      //   for (var i = 0; i < features.length; i++) {
+      //     var feature = features[i];
+      //     // Do something with the feature, such as display its attributes or geometry
+      //     console.log(feature.attributes);
+      //     console.log(feature.geometry);
+      //   }
+      // });
+      
+      // calc_winds(data, buildYear, riskCat, lifespan, method, units)
+    })
+
+
+  </script>
 
 </body>
 </html>

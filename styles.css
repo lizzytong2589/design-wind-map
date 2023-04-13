@@ -11,14 +11,15 @@ html, body {
   height: 100vh;
 }
 .form {
-  width: 40%;
+  width: 45%;
   padding: 1rem;
   box-sizing: border-box;
   float: left;
   overflow: scroll;
 }
 .map {
-  width: 70%;
+  width: 60%;
+  height: 100%;
 }
 #viewDiv {
   height: 100%;
@@ -41,7 +42,7 @@ html, body {
   font-size: 16px;
   padding: 10px;
   margin: 0;
-  width: 100%;
+  width: 50%;
   color: #333;
   background-color: #f7f7f7;
   border: 1px solid #ccc;
@@ -64,8 +65,4 @@ html, body {
   width: 200px;
   color: #fff;
   background-color: #007
-
-}
-.esri-locate {
-  z-index: 999;
 }
