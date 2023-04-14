@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV == "production";
+const webpack = require('webpack');
 
 const stylesHandler = isProduction
   ? MiniCssExtractPlugin.loader
@@ -16,16 +17,14 @@ const config = {
   output: {
     path: path.resolve(__dirname, "dist"),
   },
-  // devServer: {
-  //   open: true,
-  //   host: "localhost",
-  // },
+  devtool: 'eval-source-map',
   plugins: [
     new HtmlWebpackPlugin({
       template: "./src/index.html",
     }),
-
-    // Add your plugins here
+    new webpack.ProvidePlugin({
+      ss: 'simple-statistics'
+    }),
     // Learn more about plugins from https://webpack.js.org/configuration/plugins/
   ],
   module: {
@@ -38,10 +37,6 @@ const config = {
         test: /\.css$/i,
         use: [stylesHandler, "css-loader"],
       },
-      {
-        test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
-        type: "asset",
-      },
 
       // Add your rules for custom modules here
       // Learn more about loaders from https://webpack.js.org/loaders/
@@ -50,43 +45,15 @@ const config = {
 };
 
 
-// module.exports = () => {
-//   if (isProduction) {
-//     config.mode = "production";
+module.exports = () => {
+  if (isProduction) {
+    config.mode = "production";
 
-//     config.plugins.push(new MiniCssExtractPlugin());
+    config.plugins.push(new MiniCssExtractPlugin());
 
-//     config.plugins.push(new WorkboxWebpackPlugin.GenerateSW());
-//   } else {
-//     config.mode = "development";
-//   }
-//   return config;
-// };
-
-
-module.exports = (env, argv) => {
-  const isProduction = argv.mode === 'production';
-  const config = {
-    // your other configuration settings
-    devtool: false,
-    mode: 'production',
-    module: {
-      rules: [
-        {
-          test: /\.css$/i,
-          use: [
-            isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
-            'css-loader',
-          ],
-        },
-      ],
-    },
-    plugins: [
-      // your other plugins
-      isProduction && new MiniCssExtractPlugin(),
-      isProduction && new WorkboxWebpackPlugin.GenerateSW(),
-    ].filter(Boolean),
-  };
-
+    config.plugins.push(new WorkboxWebpackPlugin.GenerateSW());
+  } else {
+    config.mode = "development";
+  }
   return config;
 };

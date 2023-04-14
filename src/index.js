@@ -1,6 +1,5 @@
 import './styles.css';
 import * as winds from './calcWinds.js';
-import ss from 'simple-statistics';
 import * as esriLoader from 'esri-loader';
 
 esriLoader.loadModules([  "esri/config", "esri/WebMap", "esri/views/MapView", 

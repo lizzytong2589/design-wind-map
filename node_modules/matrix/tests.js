@@ -1,0 +1,1 @@
+require('./lib/node_modules/Matrix/index.test');
