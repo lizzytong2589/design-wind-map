@@ -1,5 +1,15 @@
-# design-wind-map
-Calculates design wind speeds for the US Gulf and Atlantic Coasts
+# 🚀 Welcome to your new awesome project!
 
-Author: Elizabeth Tong
-Date: March 2023
+This project has been created using **webpack-cli**, you can now run
+
+```
+npm run build
+```
+
+or
+
+```
+yarn build
+```
+
+to bundle your application
