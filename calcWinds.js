@@ -63,11 +63,6 @@ function nonstationary_return_MRI(N, lat, long, sigma, xi, u, lambda, NTC_coeff)
 }
 
 function calc_winds(countyData, buildYear, riskCat, lifespan, method, units) {
-    // if (!which(data.county_fips === FIPS)) {
-    //     throw new Error('Invalid FIPS Code or No Data at Location');
-    // }
-    // const countyData = data.filter((row) => row.county_fips === FIPS);
-
     // Set up
     const past_i = 1984 // first year of past climate
     const past_m = 2000 // middle year of past climate
@@ -85,7 +80,6 @@ function calc_winds(countyData, buildYear, riskCat, lifespan, method, units) {
     const u_future = countyData.uS_future;
     const lambda_past = countyData.lambda_past;
     const lambda_future = countyData.lambda_future;
-
 
     const years_list = [10, 25, 50, 100, 300, 700, 1700, 3000, 10000, 100000, 1000000];
     if (method === 'LEP' || method === 'AEP') {

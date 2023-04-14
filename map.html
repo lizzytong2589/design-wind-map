@@ -26,8 +26,8 @@
           <label for="scenario-select">Emissions Scenario:</label><br>
           <select id="scenario-select" required>
             <option value="">-- Select --</option>
-            <option value="1">SSP2-4.5 (Intermediate)</option>
-            <option value="2">SSP5-8.5 (High)</option>
+            <option value="SSP245">SSP2-4.5 (Intermediate)</option>
+            <option value="SSP585">SSP5-8.5 (High)</option>
           </select>
         </div>
 
@@ -79,78 +79,5 @@
       <div id="viewDiv"></div>
     </div>
   </div>
-  <script>
-    // let form = document.getElementById("form");
-    // form.addEventListener("submit", (e) => {
-    //   e.preventDefault(); // Prevent the form from submitting
-
-    //   // User Inputs
-    //   const scenario = document.getElementById("scenario-select").value;
-    //   const loc = document.getElementById("location-input").value;
-    //   const lifespan = document.getElementById("lifespan-input").value;
-    //   const buildYear = document.getElementById("year-input").value;
-    //   const riskCat = document.getElementById("category-select").value;
-    //   const method = document.getElementById("method-select").value;
-    //   const units = document.getElementById("units-select").value;
-    //   // const submitBtn = document.getElementById("submit-btn");
-
-    //   console.log(scenario)
-    //   console.log(loc)
-    //   console.log(lifespan)
-    //   console.log(buildYear)
-    //   console.log(riskCat)
-    //   console.log(method)
-    //   console.log(units)
-    //   console.log(webmap.layers)
-
-    //   // // Get FIPS code from location input
-    //   // var geometryService = new esri.tasks.GeometryService("https://geoenrich.arcgis.com/arcgis/rest/services/World/GeoEnrichmentServer/StandardGeographyQuery");
-
-    //   // // Set up a new instance of the FeatureLayer to query for counties
-    //   // var countyLayer = new esri.layers.FeatureLayer("http://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer/3");
-
-    //   // // Use the GeometryService to geocode the address and get its point location
-    //   // var geocodeParams = new esri.tasks.GeocodeParameters();
-    //   // geocodeParams.address = { SingleLine: loc };
-    //   // geometryService.geocode(geocodeParams, function(result) {
-    //   //   var point = result[0].location;
-
-    //   //   // Set up a query to find the county the point is located in
-    //   //   var query = new esri.tasks.Query();
-    //   //   query.geometry = point;
-    //   //   query.spatialRelationship = esri.tasks.Query.SPATIAL_REL_INTERSECTS;
-
-    //   //   // Execute the query against the county layer and get the county FIPS code
-    //   //   countyLayer.queryFeatures(query, function(featureSet) {
-    //   //     var countyFeature = featureSet.features[0];
-    //   //     var fipsCode = countyFeature.attributes["STATE_FIPS"] + countyFeature.attributes["COUNTY_FIPS"];
-    //   //     console.log("County FIPS code: " + fipsCode);
-    //   //     var FIPS = fipsCode
-    //   //   });
-    //   // });
-
-
-    //   // // Query
-    //   // featureLayer.setQuery(scenario)
-    //   // var query = new esri.tasks.Query();
-    //   // query.where = "county_fips = " + FIPS;
-      
-    //   // featureLayer.queryFeatures(query, function(featureSet) {
-    //   //   // Iterate through the features and do something with each one
-    //   //   var features = featureSet.features;
-    //   //   for (var i = 0; i < features.length; i++) {
-    //   //     var feature = features[i];
-    //   //     // Do something with the feature, such as display its attributes or geometry
-    //   //     console.log(feature.attributes);
-    //   //     console.log(feature.geometry);
-    //   //   }
-    //   // });
-      
-    //   console.log(calc_winds(data, buildYear, riskCat, lifespan, method, units))
-    // })
-
-
-  </script>
-
 </body>
 </html>

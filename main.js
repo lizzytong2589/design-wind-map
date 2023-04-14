@@ -2,15 +2,13 @@ require([
   "esri/config",
   "esri/WebMap",
   "esri/views/MapView",
-  "esri/layers/FeatureLayer",
-  "esri/views/layers/FeatureLayerView",
 
   "esri/widgets/Locate",
   "esri/widgets/Search",
   "esri/widgets/ScaleBar",
   "esri/widgets/Compass",
   "esri/rest/locator",
-], function(esriConfig, WebMap, MapView, Locate, Search, ScaleBar, Compass, locator, FeatureLayer, FeatureLayerView) {
+], function(esriConfig, WebMap, MapView, Locate, Search, ScaleBar, Compass, locator) {
   esriConfig.apiKey = "AAPK67c58f2fc7db4d2c94008117be9258dfQgEtYssZ96mCuu03Lw7S0xw0kMlTLFhj7BNBSpuip6n7BvD-Drz-GoDehFlw5pqx";
 
   const webmap = new WebMap({
@@ -97,17 +95,46 @@ require([
       const riskCat = document.getElementById("category-select").value;
       const method = document.getElementById("method-select").value;
       const units = document.getElementById("units-select").value;
-      // const submitBtn = document.getElementById("submit-btn");
 
-      // console.log(scenario)
-      // console.log(loc)
-      // console.log(lifespan)
-      // console.log(buildYear)
-      // console.log(riskCat)
-      // console.log(method)
-      // console.log(units)
-      console.log(webmap.layers.getItemAt())
+      // Get relevant feature layer
+      var featureLayer = webmap.allLayers.find(function(featureLayer) {
+        return featureLayer.title === scenario;
+      });
 
+
+      // Wait for the layer to load
+      featureLayer.load().then(() => {
+         // Create a new query
+        const query = featureLayer.createQuery();
+        query.where =  `county_fips = '${parseInt(loc)}'`
+
+        // Run the query and return the results
+        featureLayer.queryFeatures(query).then(function(result){
+          if (result.features.length > 0) {
+            var data = result.features[0].attributes;
+
+            // Create an empty list to store the field-value pairs
+            const dataList = {};
+
+            // Loop through the properties of the object and add them to the list
+            for (const field in data) {
+              if (data.hasOwnProperty(field)) {
+                dataList[field] = data[field];
+              }
+            }
+            
+            calc_winds(dataList, buildYear, riskCat, lifespan, method, units)
+          } else {
+            alert(`No data was found for location: ${loc}. Please try again with a different location.`)
+          }
+        }).catch(function(error){
+          console.error(error);
+
+        });
+      }).catch(error => {
+        console.error("Error loading feature layer:", error);
+      });
+      
       // // Get FIPS code from location input
       // var geometryService = new esri.tasks.GeometryService("https://geoenrich.arcgis.com/arcgis/rest/services/World/GeoEnrichmentServer/StandardGeographyQuery");
 
@@ -151,7 +178,6 @@ require([
       //   }
       // });
       
-      console.log(calc_winds(data, buildYear, riskCat, lifespan, method, units))
     })
 
 });
