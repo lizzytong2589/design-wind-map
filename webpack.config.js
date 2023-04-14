@@ -21,12 +21,21 @@ const config = {
   plugins: [
     new HtmlWebpackPlugin({
       template: "./src/index.html",
+      // minify: {
+      //   collapseWhitespace: true
+      // }
     }),
     new webpack.ProvidePlugin({
       ss: 'simple-statistics'
     }),
+    new webpack.ProvidePlugin({
+      math: 'math.js'
+    }),
     // Learn more about plugins from https://webpack.js.org/configuration/plugins/
   ],
+  externals: {
+    'arcgis-js-api': 'arcgis',
+  },
   module: {
     rules: [
       {

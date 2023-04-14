@@ -1,1 +1,0 @@
-module.exports = 'valueOf,isPrototypeOf,propertyIsEnumerable,hasOwnProperty,toLocaleString,toString'.split(',');

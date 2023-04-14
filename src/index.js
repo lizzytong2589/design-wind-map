@@ -2,10 +2,13 @@ import './styles.css';
 import * as winds from './calcWinds.js';
 import * as esriLoader from 'esri-loader';
 
-esriLoader.loadModules([  "esri/config", "esri/WebMap", "esri/views/MapView", 
-  "esri/widgets/Locate", "esri/widgets/Search","esri/widgets/ScaleBar",
-  "esri/widgets/Compass","esri/rest/locator",], {css: true})
-  .then(([esriConfig, WebMap, MapView, Locate, Search, ScaleBar, Compass, locator]) => {
+esriLoader.loadModules([  
+  "esri/config", "esri/WebMap", "esri/views/MapView", 
+  "esri/widgets/Locate", "esri/widgets/Search",
+  "esri/widgets/ScaleBar","esri/widgets/Compass",
+  // "esri/rest/locator"
+], {css: true})
+  .then(([esriConfig, WebMap, MapView, Locate, Search, ScaleBar, Compass]) => {
     esriConfig.apiKey = "AAPK67c58f2fc7db4d2c94008117be9258dfQgEtYssZ96mCuu03Lw7S0xw0kMlTLFhj7BNBSpuip6n7BvD-Drz-GoDehFlw5pqx";
 
     const webmap = new WebMap({
@@ -44,15 +47,15 @@ esriLoader.loadModules([  "esri/config", "esri/WebMap", "esri/views/MapView",
       view: view,
     });
 
-    // const search = new Search({
-    //   view: view,
-    //   container: document.getElementById("location")
-    // });
+    const search = new Search({
+      view: view,
+      // container: document.getElementById("location")
+    });
 
     // Add widgets to map
     view.ui.add(scalebar, "bottom-left");
     view.ui.add([locate,compass], "top-left");
-    view.ui.add(scalebar, "bottom-left");
+    view.ui.add(search, "top-right");
 
     // Perform analysis
     let form = document.getElementById("form");
@@ -95,23 +98,23 @@ esriLoader.loadModules([  "esri/config", "esri/WebMap", "esri/views/MapView",
             }
 
             winds.calc_winds(dataList, buildYear, riskCat, lifespan, method, units)
+
+            // Display the results
+            // const rows = ["Design Wind (" + units + ")", "Lat", "Long", "Risk Category",
+            //     "10-year MRI", "25-year MRI", "50-year MRI",
+            //     "100-year MRI", "300-year MRI", "700-year MRI",
+            //     "1,700-year MRI", "3,000-year MRI", "10,000-year MRI",
+            //     "100,000-year MRI", "1,000,000-year MRI"];
           } else {
             alert(`No data was found for location: ${loc}. Please try again with a different location.`)
           }
-        }).catch(function(error){
-          console.error(error);
-
-        });
+        })
       }).catch(error => {
         console.error("Error loading feature layer:", error);
       });
-      
     })
 
-  }).catch(err => {
-    console.error(err);
-  });
-
+  })
   
 
   
