@@ -50,15 +50,43 @@ const config = {
 };
 
 
-module.exports = () => {
-  if (isProduction) {
-    config.mode = "production";
+// module.exports = () => {
+//   if (isProduction) {
+//     config.mode = "production";
 
-    config.plugins.push(new MiniCssExtractPlugin());
+//     config.plugins.push(new MiniCssExtractPlugin());
 
-    config.plugins.push(new WorkboxWebpackPlugin.GenerateSW());
-  } else {
-    config.mode = "development";
-  }
+//     config.plugins.push(new WorkboxWebpackPlugin.GenerateSW());
+//   } else {
+//     config.mode = "development";
+//   }
+//   return config;
+// };
+
+
+module.exports = (env, argv) => {
+  const isProduction = argv.mode === 'production';
+  const config = {
+    // your other configuration settings
+    devtool: false,
+    mode: 'production',
+    module: {
+      rules: [
+        {
+          test: /\.css$/i,
+          use: [
+            isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+            'css-loader',
+          ],
+        },
+      ],
+    },
+    plugins: [
+      // your other plugins
+      isProduction && new MiniCssExtractPlugin(),
+      isProduction && new WorkboxWebpackPlugin.GenerateSW(),
+    ].filter(Boolean),
+  };
+
   return config;
 };

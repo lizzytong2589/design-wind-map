@@ -1,9 +1,11 @@
+import './styles.css';
+import * as winds from './calcWinds.js';
 import ss from 'simple-statistics';
-import { loadModules } from 'esri-loader';
+import * as esriLoader from 'esri-loader';
 
-loadModules([  "esri/config", "esri/WebMap", "esri/views/MapView", 
+esriLoader.loadModules([  "esri/config", "esri/WebMap", "esri/views/MapView", 
   "esri/widgets/Locate", "esri/widgets/Search","esri/widgets/ScaleBar",
-  "esri/widgets/Compass","esri/rest/locator",]), {css: true}
+  "esri/widgets/Compass","esri/rest/locator",], {css: true})
   .then(([esriConfig, WebMap, MapView, Locate, Search, ScaleBar, Compass, locator]) => {
     esriConfig.apiKey = "AAPK67c58f2fc7db4d2c94008117be9258dfQgEtYssZ96mCuu03Lw7S0xw0kMlTLFhj7BNBSpuip6n7BvD-Drz-GoDehFlw5pqx";
 
@@ -93,7 +95,7 @@ loadModules([  "esri/config", "esri/WebMap", "esri/views/MapView",
               }
             }
 
-            calc_winds(dataList, buildYear, riskCat, lifespan, method, units)
+            winds.calc_winds(dataList, buildYear, riskCat, lifespan, method, units)
           } else {
             alert(`No data was found for location: ${loc}. Please try again with a different location.`)
           }

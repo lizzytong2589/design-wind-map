@@ -1,4 +1,4 @@
-function calc_LEP(test_value, sigma, xi, u, lambda, NTC_coeff, m) {
+export function calc_LEP(test_value, sigma, xi, u, lambda, NTC_coeff, m) {
     let p_TC = 1;
     for (let i = 0; i < lambda.length; i++) {
       p_TC *= Math.exp(-lambda[i] * Math.pow(1 + xi / sigma * (test_value - u), -1 / xi));
@@ -11,7 +11,7 @@ function calc_LEP(test_value, sigma, xi, u, lambda, NTC_coeff, m) {
     return p;
   }
 
-function nonstationary_return(x, sigma, xi, u, lambda, NTC_coeff, stationary) {
+export function nonstationary_return(x, sigma, xi, u, lambda, NTC_coeff, stationary) {
     let m = sigma.length;
     let test_value = Math.ceil(Math.max(...u));
     let p = 1;
@@ -24,7 +24,7 @@ function nonstationary_return(x, sigma, xi, u, lambda, NTC_coeff, stationary) {
     return xd;
 }
 
-function nonstationary_return_MRI(N, lat, long, sigma, xi, u, lambda, NTC_coeff) {
+export function nonstationary_return_MRI(N, lat, long, sigma, xi, u, lambda, NTC_coeff) {
     let test_value_i = Math.ceil(Math.max(...u));
     let MRI = 0;
     while (N > MRI) {
@@ -57,7 +57,7 @@ function nonstationary_return_MRI(N, lat, long, sigma, xi, u, lambda, NTC_coeff)
     return xd;
 }
 
-function calc_winds(countyData, buildYear, riskCat, lifespan, method, units) {                                                     
+export function calc_winds(countyData, buildYear, riskCat, lifespan, method, units) {                                                     
     // Set up
     const past_m = 2000;   // middle year of past climate
     const future_f = 2100; // last year of future climate
