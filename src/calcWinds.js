@@ -27,36 +27,43 @@ export function nonstationary_return(x, sigma, xi, u, lambda, NTC_coeff) {
 }
 
 export function nonstationary_return_MRI(N, sigma, xi, u, lambda, NTC_coeff) {
-  console.log(u)
+  // Check first year
   let test_value_i = Math.ceil(ss.max(u));
+  console.log(test_value_i)
   let MRI = 0;
   while (N > MRI) {
-    let T_TC = Math.pow(1 - Math.exp(-lambda[0] * Math.pow(1 + xi[0] * (test_value_i - u[0]) / sigma[0], -1 / xi[0])), -1);
+    let T_TC = Math.pow(1 - Math.exp(-lambda[0] * Math.pow( 1 + (xi[0] / sigma[0]) * (test_value_i - u[0]), (-1 / xi[0]) )), -1);
     if (isNaN(T_TC)) {
       T_TC = Infinity;
     }
-    let T_NTC = Math.pow(1 - Math.exp(-(test_value_i - NTC_coeff[0]) / NTC_coeff[1]), -1);
+    let T_NTC = Math.pow(1 - Math.exp(-Math.exp(-(test_value_i - NTC_coeff[0]) / NTC_coeff[1])), -1);
     MRI = Math.pow(1 - (1 - 1 / T_TC) * (1 - 1 / T_NTC), -1);
     if (MRI < 0) {
       MRI = 0;
     }
     test_value_i++;
   }
-  let test_value_f = Math.ceil(Math.max(...u));
+
+  // Check last year
+  let test_value_f = Math.ceil(ss.max(u));
+  console.log(test_value_f)
   MRI = 0;
   while (N > MRI) {
-    let T_TC = Math.pow(1 - Math.exp(-lambda[1] * Math.pow(1 + xi[1] * (test_value_f - u[1]) / sigma[1], -1 / xi[1])), -1);
+    let T_TC = Math.pow(1 - Math.exp(-lambda[1] * Math.pow( 1 + (xi[1] / sigma[1]) * (test_value_f - u[1]) , (-1 / xi[1]) )), -1);
     if (isNaN(T_TC)) {
       T_TC = Infinity;
     }
-    let T_NTC = Math.pow(1 - Math.exp(-(test_value_i - NTC_coeff[0]) / NTC_coeff[1]), -1);
+    let T_NTC = Math.pow(1 - Math.exp(-Math.exp(-(test_value_i - NTC_coeff[0]) / NTC_coeff[1])), -1);
     MRI = Math.pow(1 - (1 - 1 / T_TC) * (1 - 1 / T_NTC), -1);
     if (MRI < 0) {
       MRI = 0;
     }
     test_value_f++;
   }
+  console.log(test_value_i)
+  console.log(test_value_f)
   let xd = Math.max(test_value_i, test_value_f) - 1;
+  console.log(xd)
   return xd;
 }
 
@@ -81,7 +88,7 @@ export function calc_winds(countyData, buildYear, riskCat, lifespan, method, uni
     const future_f = 2100; // last year of future climate
 
     if (buildYear < past_m) {
-        console.warn('stationary climate assumed for years before 2000');
+      alert('stationary climate assumed for years before 2000');
     }
     
     const past = [countyData.scale_past, countyData.shp_past];
@@ -100,7 +107,7 @@ export function calc_winds(countyData, buildYear, riskCat, lifespan, method, uni
       const year = Array.from({length:lifespan}, (_,i) => buildYear+i);
 
       if (year.some(y => y > future_f)) {
-          console.warn('stationary climate assumed for years after 2100');
+        alert('stationary climate assumed for years after 2100');
       }
 
       let coeff_p = year.map(y => (future_f - y) / (future_f - past_m));
@@ -159,7 +166,6 @@ export function calc_winds(countyData, buildYear, riskCat, lifespan, method, uni
           xd = nonstationary_return(1/MRI, sigma, xi, u, lambda,[countyData.NTC_1, countyData.NTC_2]);
         } 
       }
-      console.log(xd)
       if (method === "LEP" || (typeof xd === 'undefined')) {   // when AEP met, use LEP design wind
         // console.log(`Use LEP wind in the ${method} approach`)
         xd = xd_LEP;
@@ -184,7 +190,7 @@ export function calc_winds(countyData, buildYear, riskCat, lifespan, method, uni
     else if (method === "MRI") {
       console.log("MRI")
       const year = [buildYear, buildYear + lifespan - 1];
-      if (Math.max(...year) > future_f) console.warning('stationary climate assumed for years after 2100');
+      if (Math.max(...year) > future_f) alert('stationary climate assumed for years after 2100');
       const coeff_p = year.map(y => (future_f - y) / (future_f - past_m));
       const coeff_f = year.map(y => (y - past_m) / (future_f - past_m));
       for (let i = 0; i < 2; i++) {
@@ -198,31 +204,28 @@ export function calc_winds(countyData, buildYear, riskCat, lifespan, method, uni
         }
       }
       
-      const sigma = addVectors(coeff_p[0] * past[0], coeff_f[0] * future[0]);
-      const xi = addVectors(coeff_p[1] * past[1], coeff_f[1] * future[1]);
-      const u = addVectors(coeff_p[0] * u_past, coeff_f[0] * u_future);
-      const lambda = addVectors(coeff_p[0], lambda_past + coeff_f[0] * lambda_future);
+      let sigma = addVectors(coeff_p.map(x => x * past[0]), coeff_f.map(x => x * future[0])); // scale param 
+      let xi = addVectors(coeff_p.map(x => x * past[1]), coeff_f.map(x => x * future[1]));    // shape param
+      let u = addVectors(coeff_p.map(x => x * u_past), coeff_f.map(x => x * u_future));       // threshold param
+      let lambda = addVectors(coeff_p.map(x => x * lambda_past), coeff_f.map(x => x * lambda_future)); // freq
       
       const ASCE = [300, 700, 1700, 3000];
       const N = ASCE[riskCat - 1];
-      xd = nonstationary_return_MRI(N, countyData.latP, countyData.lonP, sigma, xi, u, lambda,
-                                          [countyData.NTC_1, countyData.NTC_2]);
+      xd = nonstationary_return_MRI(N, sigma, xi, u, lambda, [countyData.NTC_1, countyData.NTC_2]);
       
       // Additional wind return levels
       winds = Array.from({length: years_list.length}, () => NaN);
       for (let i = 0; i < years_list.length; i++) {
-        const N = years_list[i];
-        winds[i] = nonstationary_return_MRI(N, countyData.latP, countyData.lonP, 
-                                            sigma, xi, u, lambda,
-                                            [countyData.NTC_1, countyData.NTC_2]);
+        winds[i] = nonstationary_return_MRI(years_list[i], sigma, xi, u, lambda, [countyData.NTC_1, countyData.NTC_2]);
       }
+      console.log(xd)
+      console.log(winds)
     }      
 
     const ms_to_mph = 2.23694;
     xd = units === "SI" ? xd : ms_to_mph*xd;
     xd = Math.round(xd * 100) / 100;    // rounds to 2 decimal places
     units = units === "SI" ? "m/s" : "mph";
-    console.log(`Design wind speed for the ${method} approach: ${xd} ${units}`);
 
     const res = { 
       designWind: xd,
@@ -244,6 +247,5 @@ export function calc_winds(countyData, buildYear, riskCat, lifespan, method, uni
       wind1000000: (units === "m/s" ? winds[10] : ms_to_mph*winds[10]).toFixed(0)
     };
 
-    console.table(res);
     return({wind:xd, result:res})
 }
