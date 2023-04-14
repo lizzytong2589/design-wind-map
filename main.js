@@ -72,10 +72,10 @@ require([
     });
   }
 
-  const search = new Search({
-    view: view,
-    container: document.getElementById("location")
-  });
+  // const search = new Search({
+  //   view: view,
+  //   container: document.getElementById("location")
+  // });
 
   // Add widgets to map
   view.ui.add(scalebar, "bottom-left");
@@ -90,9 +90,9 @@ require([
       // User Inputs
       const scenario = document.getElementById("scenario-select").value;
       const loc = document.getElementById("location-input").value;
-      const lifespan = document.getElementById("lifespan-input").value;
-      const buildYear = document.getElementById("year-input").value;
-      const riskCat = document.getElementById("category-select").value;
+      const lifespan = parseInt(document.getElementById("lifespan-input").value);
+      const buildYear = parseInt(document.getElementById("year-input").value);
+      const riskCat = parseInt(document.getElementById("category-select").value);
       const method = document.getElementById("method-select").value;
       const units = document.getElementById("units-select").value;
 
@@ -100,7 +100,6 @@ require([
       var featureLayer = webmap.allLayers.find(function(featureLayer) {
         return featureLayer.title === scenario;
       });
-
 
       // Wait for the layer to load
       featureLayer.load().then(() => {
@@ -122,7 +121,7 @@ require([
                 dataList[field] = data[field];
               }
             }
-            
+
             calc_winds(dataList, buildYear, riskCat, lifespan, method, units)
           } else {
             alert(`No data was found for location: ${loc}. Please try again with a different location.`)

@@ -13,19 +13,14 @@ function calc_LEP(test_value, sigma, xi, u, lambda, NTC_coeff, m) {
 
 function nonstationary_return(x, sigma, xi, u, lambda, NTC_coeff, stationary) {
     let m = sigma.length;
-    let test_value;
-    if (stationary == 1) {
-      test_value = x; // design wind
-      return calc_LEP(test_value, sigma, xi, u, lambda, NTC_coeff, m);
-    } else {
-      test_value = Math.ceil(Math.max(...u));
-    }
+    let test_value = Math.ceil(Math.max(...u));
     let p = 1;
     while (p > x) {
       p = calc_LEP(test_value, sigma, xi, u, lambda, NTC_coeff, m);
       test_value++;
     }
     let xd = test_value - 1;
+    console.log(xd)
     return xd;
 }
 
@@ -62,13 +57,10 @@ function nonstationary_return_MRI(N, lat, long, sigma, xi, u, lambda, NTC_coeff)
     return xd;
 }
 
-function calc_winds(countyData, buildYear, riskCat, lifespan, method, units) {
+function calc_winds(countyData, buildYear, riskCat, lifespan, method, units) {                                                     
     // Set up
-    const past_i = 1984 // first year of past climate
-    const past_m = 2000 // middle year of past climate
-    const past_f = 2015 // last year of past climate
-    const future_i = 2070 // first year of future climate
-    const future_f = 2100 // last year of future climate
+    const past_m = 2000;   // middle year of past climate
+    const future_f = 2100; // last year of future climate
 
     if (buildYear < past_m) {
         console.warn('stationary climate assumed for years before 2000');
@@ -83,7 +75,7 @@ function calc_winds(countyData, buildYear, riskCat, lifespan, method, units) {
 
     const years_list = [10, 25, 50, 100, 300, 700, 1700, 3000, 10000, 100000, 1000000];
     if (method === 'LEP' || method === 'AEP') {
-        const year = new Array(lifespan).fill().map((_, i) => buildYear + (i / lifespan));
+        const year = Array.from({length:lifespan}, (_,i) => buildYear+i)
 
         if (year.some(y => y > future_f)) {
             console.warn('stationary climate assumed for years after 2100');
@@ -104,21 +96,16 @@ function calc_winds(countyData, buildYear, riskCat, lifespan, method, units) {
         }
 
         // Linear Interpolation
-        let sigma = coeff_p * past[0] + coeff_f * future[0]; // scale param
-        let xi = coeff_p * past[1] + coeff_f * future[1]; // shape param
-        let u = coeff_p * u_past + coeff_f * u_future; // threshold
-        let lambda = coeff_p * lambda_past + coeff_f * lambda_future;
+        let sigma = coeff_p.map(x => x * past[0]) + coeff_f.map(x => x * future[0]); // scale param 
+        let xi = coeff_p.map(x => x * past[1]) + coeff_f.map(x => x * future[1]);    // shape param
+        let u = coeff_p.map(x => x * u_past) + coeff_f.map(x => x * u_future);       // threshold param
+        let lambda = coeff_p.map(x => x * lambda_past) + coeff_f.map(x => x * lambda_future); // freq
         const ASCE = [300, 700, 1700, 3000];
         const MRI = ASCE[riskCat];
         let x = 1 - Math.pow(1 - 1 / MRI, lifespan);
 
-        let stationary = 0;
-        if (testVal !== null && method == "LEP") {
-            x = testVal;
-            stationary = 1;
-        }
-
         // design wind speed
+        let stationary = 0;
         let xd_LEP = nonstationary_return(x, sigma, xi, u, lambda, [countyData.NTC_1, countyData.NTC_2], stationary);
 
         if (method == "AEP") {
@@ -129,7 +116,7 @@ function calc_winds(countyData, buildYear, riskCat, lifespan, method, units) {
             }
             // check direction
             let x_arr = Array.from({ length: lifespan }, (_, i) => i + 1);
-            let m = regression.linear(x_arr, AEP).m;
+            let m = ss.linearRegression(ss.zip(x_arr, AEP)).m;
             let dir = m > 0 ? 1 : 0;
 
             if (dir === 1 && max(AEP) > 1/MRI) {
