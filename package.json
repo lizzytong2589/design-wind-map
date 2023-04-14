@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "arcgis-js-api": "^4.26.5",
+    "esri-loader": "^3.7.0",
     "simple-statistics": "^7.8.3"
   },
   "devDependencies": {
@@ -18,10 +20,13 @@
     "workbox-webpack-plugin": "^6.5.4"
   },
   "version": "1.0.0",
-  "description": "My webpack project",
-  "name": "my-webpack-project",
+  "description": "Calculate design wind speeds for the U.S. Gulf and Atlantic Coasts with consideration of climate change",
+  "name": "Design Wind Speeds",
+  "main": "index.js",
+  "author": "Elizabeth Tong",
+  "private": true,
   "scripts": {
-    "build": "webpack --mode=production --node-env=production",
+    "build": "webpack --mode=production --node-env=production --config webpack.config.js",
     "build:dev": "webpack --mode=development",
     "build:prod": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch",
