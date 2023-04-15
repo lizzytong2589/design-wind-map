@@ -10,17 +10,56 @@
   
 </head>
 <body>
+  <script>
+    function openTab(evt, tabName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].classList.remove("show");
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].classList.remove("active");
+      }
+      document.getElementById(tabName).classList.add("show");
+      evt.currentTarget.classList.add("active");
+    }
+  </script>
   <div class="container">
     <div class="panel-div" id="panel-div">
       <h2>Design Wind Speed Calculator</h2>
       <div id="table-div" class="hidden"></div>
       <div id="form-div">
         <form id="form">
-          <div class="input-group">
+          <!-- <div class="input-group">
             <label for="location-input">Enter Location:</label><br>
             <input type="text" id="location-input" pattern="\d{5}" placeholder="e.g. 01001" required>
+          </div> -->
+          <div class="input-group" id="location-panel">
+            <label for="location-input">Select Location:</label><br>
+            <div class="tab">
+              <button class="tab col tab-selector" onclick="openTab(event, 'Tab1')">Address</button>
+              <button class="tablinks" onclick="openTab(event, 'Tab2')">Lat/Long</button>
+              <button class="tablinks" onclick="openTab(event, 'Tab3')">Select on Map</button>
+            </div>
+          </div>
+          <!-- Each option's input display -->
+          <div id="Tab1" class="tabcontent">
+            <h3>Tab 1 Content</h3>
+            <p>This is the content for Tab 1.</p>
           </div>
           
+          <div id="Tab2" class="tabcontent">
+            <h3>Tab 2 Content</h3>
+            <p>This is the content for Tab 2.</p>
+          </div>
+          
+          <div id="Tab3" class="tabcontent">
+            <h3>Tab 3 Content</h3>
+            <p>This is the content for Tab 3.</p>
+          </div>
+          
+          <!-- Other inputs -->
           <div class="input-group">
             <label for="scenario-select">Emissions Scenario:</label><br>
             <select id="scenario-select" required>

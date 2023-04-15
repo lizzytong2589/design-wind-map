@@ -1,13 +1,13 @@
 import './styles.css';
 import * as winds from './calcWinds.js';
 import * as esriLoader from 'esri-loader';
-import * as table from './generateTable.js'
+import * as table from './generateTable.js';
 
 esriLoader.loadModules([  
   "esri/config", "esri/WebMap", "esri/views/MapView", 
   "esri/widgets/Locate", "esri/widgets/Search",
   "esri/widgets/ScaleBar","esri/widgets/Compass",
-  // "esri/rest/locator"
+  "esri/rest/locator"
 ], {css: true})
   .then(([esriConfig, WebMap, MapView, Locate, Search, ScaleBar, Compass]) => {
     esriConfig.apiKey = "AAPK67c58f2fc7db4d2c94008117be9258dfQgEtYssZ96mCuu03Lw7S0xw0kMlTLFhj7BNBSpuip6n7BvD-Drz-GoDehFlw5pqx";
@@ -50,7 +50,7 @@ esriLoader.loadModules([
 
     const search = new Search({
       view: view,
-      // container: document.getElementById("location")
+      container: document.getElementById("location")
     });
 
     // Add widgets to map
