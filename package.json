@@ -30,7 +30,9 @@
     "build": "webpack --mode=production --node-env=production --config webpack.config.js",
     "build:dev": "webpack --mode=development",
     "build:prod": "webpack --mode=production --node-env=production",
-    "deploy": "npm run build && gh-pages -d dist",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
+    "clean": "gh-pages-clean",
     "watch": "webpack --watch",
     "serve": "webpack serve"
   }

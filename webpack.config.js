@@ -15,6 +15,7 @@ const stylesHandler = isProduction
 const config = {
   entry: "./src/index.js",
   output: {
+    filename: 'main.js',
     path: path.resolve(__dirname, "dist"),
   },
   devtool: 'eval-source-map',
