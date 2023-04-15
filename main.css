@@ -1,3 +1,9 @@
+@media (max-width: 400px) {
+  #location-panel label {
+    font-size: 0.8em;
+  }
+}
+
 html {
   padding: 0;
   margin: 0;
@@ -8,13 +14,16 @@ html {
 body {
   overflow: hidden;
 }
+.hidden {
+  display: none;
+}
 .container {
   display: flex;
   flex-direction: row;
   height: 100vh;
 }
 .panel-div {
-  width: 40%;
+  width: 55%;
   padding: 1rem;
   box-sizing: border-box;
   float: left;
@@ -36,25 +45,23 @@ body {
     background-color: #f2f2f2;
 }
 .map {
-  width: 60%;
+  width: 55%;
   height: 100%;
 }
 #viewDiv {
   height: 100%;
 }
 
-/* Style the input groups */
+/* Style the inputs for the form*/
 .input-group {
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
 }
-
 .input-group label {
   font-weight: bold;
   margin-bottom: 5px;
 }
-
 .input-group input,
 .input-group select {
   font-size: 16px;
@@ -69,7 +76,6 @@ body {
   outline: none;
   cursor: pointer;
 }
-
 .input-group select {
   cursor: pointer;
 }
@@ -94,59 +100,60 @@ body {
   cursor: pointer;
 }
 
+/* Style the back button */
 .back-button:hover {
   background-color: #000000;
   color: #ffffff;
 }
-
 .back-button::before {
   content: '\2190'; /* Unicode value for left arrow */
   display: inline-block;
   margin-right: 8px;
 }
-.hidden {
-  display: none;
-}
 
-/* Location panel */
-#location-panel {
-  padding: 20px;
+/* Location tabs panel */
+.location-box {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #f9f9f9;
-  margin-bottom: 20px;
+  padding: 15px;
+}
+.loc{
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  flex-wrap: nowrap;
 }
 .tab {
   overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  flex-direction: row;
 }
-
 .tab button {
   background-color: inherit;
-  float: left;
-  border: none;
+  border: 1px solid #ccc;
   outline: none;
   cursor: pointer;
   padding: 14px 16px;
   transition: 0.3s;
+  flex: 1;
 }
-
 .tab button:hover {
   background-color: #ddd;
 }
-
 .tab button.active {
   background-color: #ccc;
 }
-
 .tabcontent {
   display: none;
   padding: 6px 12px;
-  border: 1px solid #ccc;
   border-top: none;
 }
-
 .tabcontent.show {
   display: block;
 }
+
