@@ -1,21 +1,27 @@
-export function goBack(content) {
+export function goBack() {
     const formDiv = document.getElementById("form-div");
-    formDiv.innerHTML = "";
-    formDiv.appendChild(content.cloneNode(true));
+    formDiv.classList.remove("hidden");
+    
+    const tableDiv = document.getElementById("table-div");
+    tableDiv.classList.add("hidden");
 }
 
-export function generateTable(data, content) {
+export function generateTable(data) {
+    // Hide Form
     const formDiv = document.getElementById("form-div");
-    formDiv.innerHTML = "";
+    formDiv.classList.add("hidden");
+
+    // Unhide Table
+    const tableDiv = document.getElementById("table-div");
+    tableDiv.classList.remove("hidden");
+    tableDiv.innerHTML = "";
 
     // Add back button
     const backButton = document.createElement("button");
     backButton.classList.add("back-button");
     backButton.value = "&#8592;";
-    backButton.addEventListener("click", function() {
-        goBack(content)
-    });
-    formDiv.appendChild(backButton);
+    backButton.addEventListener("click", function() { goBack(); });
+    tableDiv.appendChild(backButton);
 
     // Create table and add data to rows
     let table = document.createElement("table");
@@ -33,6 +39,6 @@ export function generateTable(data, content) {
     }
 
     // add table to panel div 
-    formDiv.appendChild(table);
+    tableDiv.appendChild(table);
 }
 

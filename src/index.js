@@ -63,6 +63,11 @@ esriLoader.loadModules([
     form.addEventListener("submit", (e) => {
       e.preventDefault(); // Prevent the form from submitting
       e.stopImmediatePropagation();
+
+      // Hide Form
+      const formDiv = document.getElementById("form-div");
+      formDiv.classList.add("hidden");
+
       // User Inputs
       const scenario = document.getElementById("scenario-select").value;
       const loc = document.getElementById("location-input").value;
