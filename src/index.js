@@ -50,7 +50,7 @@ esriLoader.loadModules([
 
     const search = new Search({
       view: view,
-      container: document.getElementById("location")
+      container: document.getElementById("Tab1")
     });
 
     // Add widgets to map
@@ -63,10 +63,6 @@ esriLoader.loadModules([
     form.addEventListener("submit", (e) => {
       e.preventDefault(); // Prevent the form from submitting
       e.stopImmediatePropagation();
-
-      // Hide Form
-      const formDiv = document.getElementById("form-div");
-      formDiv.classList.add("hidden");
 
       // User Inputs
       const scenario = document.getElementById("scenario-select").value;
@@ -105,10 +101,9 @@ esriLoader.loadModules([
 
             // Calculate design winds
             let results = winds.calc_winds(dataList, buildYear, riskCat, lifespan, method, units);
-
+            console.log(results)
             // Save form HTML and generate table with results
-            const originalContent = document.getElementById("form-div").cloneNode(true);
-            table.generateTable(results, originalContent);
+            table.generateTable(results);
             
           } else {
             alert(`No data was found for location: ${loc}. Please try again with a different location.`)

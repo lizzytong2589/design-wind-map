@@ -11,34 +11,20 @@ export function generateTable(data) {
     const formDiv = document.getElementById("form-div");
     formDiv.classList.add("hidden");
 
-    // Unhide Table
-    const tableDiv = document.getElementById("table-div");
-    tableDiv.classList.remove("hidden");
-    tableDiv.innerHTML = "";
-
-    // Add back button
-    const backButton = document.createElement("button");
-    backButton.classList.add("back-button");
-    backButton.value = "&#8592;";
+    // Button set up
+    const backButton = document.getElementById("back-button");
     backButton.addEventListener("click", function() { goBack(); });
-    tableDiv.appendChild(backButton);
 
-    // Create table and add data to rows
-    let table = document.createElement("table");
-    for (const key in data) {   
-        let row = table.insertRow(-1);
-
-        // left cell
-        let cell = row.insertCell(-1);
-        const strong = document.createElement("strong");
-        cell.appendChild(strong.appendChild( document.createTextNode(key)) );
-
-        // right cell
-        cell = row.insertCell(-1);
-        cell.innerHTML = data[key];
+    // Fill table with values
+    const table = document.getElementById("resTable");
+    table.rows[1].cells[0].textContent = Object.keys(data)[1];
+    for (let i = 0; i < table.rows.length; i++) {
+        const row = table.rows[i];
+        const rowName = row.cells[0].textContent.trim();
+        row.cells[1].textContent = data[rowName];
     }
+      
+    document.getElementById("table-div").classList.remove("hidden");
 
-    // add table to panel div 
-    tableDiv.appendChild(table);
 }
 

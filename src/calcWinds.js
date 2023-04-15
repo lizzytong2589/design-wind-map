@@ -223,7 +223,7 @@ export function calc_winds(countyData, buildYear, riskCat, lifespan, method, uni
       "Lifespan": lifespan,
       "Latitude": countyData.latP.toFixed(2),
       "Longitude": countyData.lonP.toFixed(2),
-      "Risk Category": riskCat === 1 ? 1 : (riskCat === 2 ? 2 : (riskCat === 3 ? "III": "IV")),
+      "Risk Category": riskCat === 1 ? "I" : (riskCat === 2 ? "II" : (riskCat === 3 ? "III": "IV")),
       "10-year MRI": (units === "m/s" ? winds[0] : ms_to_mph*winds[0]).toFixed(0),
       "25-year MRI": (units === "m/s" ? winds[1] : ms_to_mph*winds[1]).toFixed(0),
       "50-year MRI": (units === "m/s" ? winds[2] : ms_to_mph*winds[2]).toFixed(0),
