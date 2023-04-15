@@ -29,7 +29,6 @@ export function nonstationary_return(x, sigma, xi, u, lambda, NTC_coeff) {
 export function nonstationary_return_MRI(N, sigma, xi, u, lambda, NTC_coeff) {
   // Check first year
   let test_value_i = Math.ceil(ss.max(u));
-  console.log(test_value_i)
   let MRI = 0;
   while (N > MRI) {
     let T_TC = Math.pow(1 - Math.exp(-lambda[0] * Math.pow( 1 + (xi[0] / sigma[0]) * (test_value_i - u[0]), (-1 / xi[0]) )), -1);
@@ -44,9 +43,8 @@ export function nonstationary_return_MRI(N, sigma, xi, u, lambda, NTC_coeff) {
     test_value_i++;
   }
 
-  // Check last year
+  // Check final year
   let test_value_f = Math.ceil(ss.max(u));
-  console.log(test_value_f)
   MRI = 0;
   while (N > MRI) {
     let T_TC = Math.pow(1 - Math.exp(-lambda[1] * Math.pow( 1 + (xi[1] / sigma[1]) * (test_value_f - u[1]) , (-1 / xi[1]) )), -1);
@@ -60,10 +58,7 @@ export function nonstationary_return_MRI(N, sigma, xi, u, lambda, NTC_coeff) {
     }
     test_value_f++;
   }
-  console.log(test_value_i)
-  console.log(test_value_f)
   let xd = Math.max(test_value_i, test_value_f) - 1;
-  console.log(xd)
   return xd;
 }
 
@@ -82,7 +77,7 @@ export function addVectors(a, b) {
 
 
 export function calc_winds(countyData, buildYear, riskCat, lifespan, method, units) {                                                     
-  console.log(`Calculating for ${method}`)  
+  // console.log(`Calculating for ${method}`)  
   // Set up
     const past_m = 2000;   // middle year of past climate
     const future_f = 2100; // last year of future climate
@@ -155,7 +150,6 @@ export function calc_winds(countyData, buildYear, riskCat, lifespan, method, uni
           // console.log("Getting AEP design wind")
           const idxs = [];
           AEP.forEach((item, index) => item === maxAEP ? idxs.push(index): null);
-          console.log(idxs)
           year_max = idxs.slice(-1);
 
           sigma = sigma[year_max];
@@ -175,20 +169,16 @@ export function calc_winds(countyData, buildYear, riskCat, lifespan, method, uni
       for (let i = 0; i < years_list.length; i++) {
         let x;
         if (method == "LEP" || (typeof year_max === 'undefined')) {
-          console.log("LEP")
           x = 1 - Math.pow(1 - (1 / years_list[i]), lifespan);
         } else if (method === "AEP") {
-          console.log("AEP")
           x = 1 / years_list[i];
         }
         
         winds[i] = nonstationary_return(x, sigma, xi, u, lambda, [countyData.NTC_1, countyData.NTC_2]);
       }
-      console.log(winds)
       
     }
     else if (method === "MRI") {
-      console.log("MRI")
       const year = [buildYear, buildYear + lifespan - 1];
       if (Math.max(...year) > future_f) alert('stationary climate assumed for years after 2100');
       const coeff_p = year.map(y => (future_f - y) / (future_f - past_m));
@@ -218,8 +208,6 @@ export function calc_winds(countyData, buildYear, riskCat, lifespan, method, uni
       for (let i = 0; i < years_list.length; i++) {
         winds[i] = nonstationary_return_MRI(years_list[i], sigma, xi, u, lambda, [countyData.NTC_1, countyData.NTC_2]);
       }
-      console.log(xd)
-      console.log(winds)
     }      
 
     const ms_to_mph = 2.23694;
@@ -227,25 +215,27 @@ export function calc_winds(countyData, buildYear, riskCat, lifespan, method, uni
     xd = Math.round(xd * 100) / 100;    // rounds to 2 decimal places
     units = units === "SI" ? "m/s" : "mph";
 
+    let key1 = `Design Wind (${units})`;
     const res = { 
-      designWind: xd,
-      buildYear: buildYear,
-      lifespan: lifespan,
-      lat: countyData.latP.toFixed(2),
-      lon: countyData.lonP.toFixed(2),
-      cat: riskCat,
-      wind10: (units === "m/s" ? winds[0] : ms_to_mph*winds[0]).toFixed(0),
-      wind25: (units === "m/s" ? winds[1] : ms_to_mph*winds[1]).toFixed(0),
-      wind50: (units === "m/s" ? winds[2] : ms_to_mph*winds[2]).toFixed(0),
-      wind100: (units === "m/s" ? winds[3] : ms_to_mph*winds[3]).toFixed(0),
-      wind300: (units === "m/s" ? winds[4] : ms_to_mph*winds[4]).toFixed(0),
-      wind700: (units === "m/s" ? winds[5] : ms_to_mph*winds[5]).toFixed(0),
-      wind1700: (units === "m/s" ? winds[6] : ms_to_mph*winds[6]).toFixed(0),
-      wind3000: (units === "m/s" ? winds[7] : ms_to_mph*winds[7]).toFixed(0),
-      wind10000: (units === "m/s" ? winds[8] : ms_to_mph*winds[8]).toFixed(0),
-      wind100000: (units === "m/s" ? winds[9] : ms_to_mph*winds[9]).toFixed(0),
-      wind1000000: (units === "m/s" ? winds[10] : ms_to_mph*winds[10]).toFixed(0)
+      "County": countyData.NAME,
+      [key1]: xd,
+      "Build Year": buildYear,
+      "Lifespan": lifespan,
+      "Latitude": countyData.latP.toFixed(2),
+      "Longitude": countyData.lonP.toFixed(2),
+      "Risk Category": riskCat === 1 ? 1 : (riskCat === 2 ? 2 : (riskCat === 3 ? "III": "IV")),
+      "10-year MRI": (units === "m/s" ? winds[0] : ms_to_mph*winds[0]).toFixed(0),
+      "25-year MRI": (units === "m/s" ? winds[1] : ms_to_mph*winds[1]).toFixed(0),
+      "50-year MRI": (units === "m/s" ? winds[2] : ms_to_mph*winds[2]).toFixed(0),
+      "100-year MRI": (units === "m/s" ? winds[3] : ms_to_mph*winds[3]).toFixed(0),
+      "300-year MRI": (units === "m/s" ? winds[4] : ms_to_mph*winds[4]).toFixed(0),
+      "700-year MRI": (units === "m/s" ? winds[5] : ms_to_mph*winds[5]).toFixed(0),
+      "1,700-year MRI": (units === "m/s" ? winds[6] : ms_to_mph*winds[6]).toFixed(0),
+      "3,000-year MRI": (units === "m/s" ? winds[7] : ms_to_mph*winds[7]).toFixed(0),
+      "10,000-year MRI": (units === "m/s" ? winds[8] : ms_to_mph*winds[8]).toFixed(0),
+      "100,000-year MRI": (units === "m/s" ? winds[9] : ms_to_mph*winds[9]).toFixed(0),
+      "1,000,000-year MRI": (units === "m/s" ? winds[10] : ms_to_mph*winds[10]).toFixed(0)
     };
 
-    return({wind:xd, result:res})
+    return(res)
 }

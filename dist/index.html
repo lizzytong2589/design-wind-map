@@ -11,65 +11,67 @@
 <script defer src="main.js"></script></head>
 <body>
   <div class="container">
-    <div class="form-div">
+    <div class="panel-div" id="panel-div">
       <h2>Design Wind Speed Calculator</h2>
-      <form id="form">
-        <div class="input-group">
-          <label for="location-input">Enter Location:</label><br>
-          <input type="text" id="location-input" pattern="\d{5}" placeholder="e.g. 01001" required>
-        </div>
-        
-        <div class="input-group">
-          <label for="scenario-select">Emissions Scenario:</label><br>
-          <select id="scenario-select" required>
-            <option value="">-- Select --</option>
-            <option value="SSP245">SSP2-4.5 (Intermediate)</option>
-            <option value="SSP585">SSP5-8.5 (High)</option>
-          </select>
-        </div>
+      <div id="form-div">
+        <form id="form">
+          <div class="input-group">
+            <label for="location-input">Enter Location:</label><br>
+            <input type="text" id="location-input" pattern="\d{5}" placeholder="e.g. 01001" required>
+          </div>
+          
+          <div class="input-group">
+            <label for="scenario-select">Emissions Scenario:</label><br>
+            <select id="scenario-select" required>
+              <option value="">-- Select --</option>
+              <option value="SSP245">SSP2-4.5 (Intermediate)</option>
+              <option value="SSP585">SSP5-8.5 (High)</option>
+            </select>
+          </div>
 
-        <div class="input-group">
-          <label for="lifespan-input">Enter the Building Lifetime:</label><br>
-          <input type="number" id="lifespan-input" placeholder="e.g. 50" value=50 required>
-        </div>
+          <div class="input-group">
+            <label for="lifespan-input">Enter the Building Lifetime:</label><br>
+            <input type="number" id="lifespan-input" placeholder="e.g. 50" value=50 required>
+          </div>
 
-        <div class="input-group">
-          <label for="year-input">Enter the Year of Construction:</label><br>
-          <input type="number" id="year-input" placeholder="e.g. 2023" value=2023 required>
-        </div>
+          <div class="input-group">
+            <label for="year-input">Enter the Year of Construction:</label><br>
+            <input type="number" id="year-input" placeholder="e.g. 2023" value=2023 required>
+          </div>
 
-        <div class="input-group">
-          <label for="category-select">Risk Category:</label><br>
-          <select id="category-select" required>
-            <option value="">-- Select --</option>
-            <option value="1">I</option>
-            <option value="2">II</option>
-            <option value="3">III</option>
-            <option value="4">IV</option>
-          </select>
-        </div>
+          <div class="input-group">
+            <label for="category-select">Risk Category:</label><br>
+            <select id="category-select" required>
+              <option value="">-- Select --</option>
+              <option value="1">I</option>
+              <option value="2">II</option>
+              <option value="3">III</option>
+              <option value="4">IV</option>
+            </select>
+          </div>
 
-        <div class="input-group">
-          <label for="method-select">Design Method:</label><br>
-          <select id="method-select" required>
-            <option value="">-- Select --</option>
-            <option value="AEP">AEP</option>
-            <option value="LEP">LEP</option>
-            <option value="MRI">MRI</option>
-          </select>
-        </div>
+          <div class="input-group">
+            <label for="method-select">Design Method:</label><br>
+            <select id="method-select" required>
+              <option value="">-- Select --</option>
+              <option value="AEP">AEP</option>
+              <option value="LEP">LEP</option>
+              <option value="MRI">MRI</option>
+            </select>
+          </div>
 
-        <div class="input-group">
-          <label for="units-select">Units:</label><br>
-          <select id="units-select" required>
-            <option value="">-- Select --</option>
-            <option value="CUST">Customary</option>
-            <option value="SI">SI</option>
-          </select>
-        </div><br>
+          <div class="input-group">
+            <label for="units-select">Units:</label><br>
+            <select id="units-select" required>
+              <option value="">-- Select --</option>
+              <option value="CUST">Customary</option>
+              <option value="SI">SI</option>
+            </select>
+          </div><br>
 
-        <input id="submit-btn" type="submit" value="Submit">
-      </form>
+          <input id="submit-btn" type="submit" value="Submit">
+        </form>
+      </div>
     </div>
     <div class="map">
       <div id="viewDiv"></div>

@@ -1,6 +1,7 @@
 import './styles.css';
 import * as winds from './calcWinds.js';
 import * as esriLoader from 'esri-loader';
+import * as table from './generateTable.js'
 
 esriLoader.loadModules([  
   "esri/config", "esri/WebMap", "esri/views/MapView", 
@@ -57,11 +58,11 @@ esriLoader.loadModules([
     view.ui.add([locate,compass], "top-left");
     view.ui.add(search, "top-right");
 
-    // Perform analysis
-    let form = document.getElementById("form");
+    // Perform wind speed calculations
+    let form = document.querySelector("form");
     form.addEventListener("submit", (e) => {
       e.preventDefault(); // Prevent the form from submitting
-
+      e.stopImmediatePropagation();
       // User Inputs
       const scenario = document.getElementById("scenario-select").value;
       const loc = document.getElementById("location-input").value;
@@ -97,14 +98,13 @@ esriLoader.loadModules([
               }
             }
 
-            winds.calc_winds(dataList, buildYear, riskCat, lifespan, method, units)
+            // Calculate design winds
+            let results = winds.calc_winds(dataList, buildYear, riskCat, lifespan, method, units);
 
-            // Display the results
-            // const rows = ["Design Wind (" + units + ")", "Lat", "Long", "Risk Category",
-            //     "10-year MRI", "25-year MRI", "50-year MRI",
-            //     "100-year MRI", "300-year MRI", "700-year MRI",
-            //     "1,700-year MRI", "3,000-year MRI", "10,000-year MRI",
-            //     "100,000-year MRI", "1,000,000-year MRI"];
+            // Save form HTML and generate table with results
+            const originalContent = document.getElementById("form-div").cloneNode(true);
+            table.generateTable(results, originalContent);
+            
           } else {
             alert(`No data was found for location: ${loc}. Please try again with a different location.`)
           }
@@ -112,9 +112,8 @@ esriLoader.loadModules([
       }).catch(error => {
         console.error("Error loading feature layer:", error);
       });
-    })
-
-  })
+    }); //, { once: true });
+  }); 
   
 
   
