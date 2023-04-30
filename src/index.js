@@ -61,6 +61,7 @@ esriLoader.loadModules([
     const serviceUrl = "http://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer";
     const search = new Search({
       view: view,
+      popupEnabled: false,
       sources: [{
         url: serviceUrl,
         countryCode: "US",
@@ -70,7 +71,6 @@ esriLoader.loadModules([
         maxResults: 1,
         searchExtent: view.extent,
         autoSelect: true,
-        popupEnabled: false,
         showPopupOnSelect: false,
         visible: false,
       }],
