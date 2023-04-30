@@ -18,7 +18,7 @@ const config = {
     filename: 'main.js',
     path: path.resolve(__dirname, "dist"),
   },
-  devtool: 'eval-source-map',
+  // devtool: 'eval-source-map',
   plugins: [
     new HtmlWebpackPlugin({
       template: "./src/index.html",

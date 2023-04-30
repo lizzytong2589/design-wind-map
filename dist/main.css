@@ -1,15 +1,10 @@
-@media (max-width: 400px) {
-  #location-panel label {
-    font-size: 0.8em;
-  }
-}
-
 html {
   padding: 0;
   margin: 0;
   height: 100%;
   width: 100%;
   position: relative;
+  font-family: Arial, sans-serif;
 }
 body {
   overflow: hidden;
@@ -23,7 +18,7 @@ body {
   height: 100vh;
 }
 .panel-div {
-  width: 55%;
+  width: 45%;
   padding: 1rem;
   box-sizing: border-box;
   float: left;
@@ -86,9 +81,9 @@ body {
   font-size: 16px;
   padding: 10px;
   margin: 20px 0;
-  width: 200px;
   color: #fff;
-  background-color: #007
+  background-color: #007;
+  cursor: pointer;
 }
 .back-button {
   background-color: #ffffff;
@@ -111,10 +106,12 @@ body {
   margin-right: 8px;
 }
 
-/* Location tabs panel */
+/* Tabs Panel */
 .location-box {
   display: flex;
+  flex: 1;
   flex-direction: column;
+  width: 400px;
   margin-bottom: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -154,6 +151,68 @@ body {
   border-top: none;
 }
 .tabcontent.show {
-  display: block;
+  display: flex;
+  flex: 1;
 }
+
+/* Tabs */
+.search-bar {
+  display: flex;
+  flex: .9;
+  margin: 0 auto;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+}
+
+#input-loc {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  padding: 10px;
+  background-color: transparent;
+}
+
+.search{
+  border: none;
+  outline: none;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 20px;
+  margin-left: 10px;
+  color: white;
+  background-color: #777777;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+#search-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+  background-color: #777777;
+} 
+
+.latLong-container {
+  display: flex;
+  flex: 1;
+  width: 95%;
+  margin: 0 auto;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.latLong-bar {
+  flex: 1;
+  width: 98%;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  padding: 10px;
+  background-color: #f2f2f2;
+  box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+}
+
+
 
