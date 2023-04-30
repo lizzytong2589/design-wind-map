@@ -5,17 +5,18 @@ import * as table from './generateTable.js';
 
 esriLoader.loadModules([  
   "esri/config", "esri/WebMap", "esri/views/MapView", 
-  "esri/widgets/Locate", "esri/widgets/Search",
+  "esri/widgets/Locate", "esri/widgets/Search", 
   "esri/widgets/ScaleBar","esri/widgets/Compass",
-  "esri/rest/locator"
+  "esri/widgets/BasemapGallery", "esri/layers/FeatureLayer",
+  "esri/rest/support/Query", "esri/rest/locator", "esri/Graphic", "esri/geometry/Extent"
 ], {css: true})
-  .then(([esriConfig, WebMap, MapView, Locate, Search, ScaleBar, Compass]) => {
+  .then(([esriConfig, WebMap, MapView, Locate, Search, ScaleBar, Compass, FeatureLayer, Query, locator, Extent]) => {
     esriConfig.apiKey = "AAPK67c58f2fc7db4d2c94008117be9258dfQgEtYssZ96mCuu03Lw7S0xw0kMlTLFhj7BNBSpuip6n7BvD-Drz-GoDehFlw5pqx";
 
     const webmap = new WebMap({
-        portalItem: {
-            id: "64bc30d474a540dba020895891b1d5db"
-        }
+      portalItem: {
+          id: "64bc30d474a540dba020895891b1d5db"
+      }
     });
   
     const view = new MapView({
@@ -24,12 +25,21 @@ esriLoader.loadModules([
         center: [-74.6, 37.5], // Longitude, latitude
         zoom: 5,               // Start zoom level
         constraints: {
-            minZoom: 15,
-            maxZoom: 4,
+          minZoom: 15,
+          maxZoom: 4,
+          geometry: {
+            type: "extent",
+            xmin: -107,
+            ymin:  25,
+            xmax: -66,
+            ymax:  48
+          },
+          spatialReference: {
+            wkid: 4326
+          }
         },
-  
     });
-  
+
     // Add widgets
     const scalebar = new ScaleBar({
         view: view
@@ -39,7 +49,7 @@ esriLoader.loadModules([
       view: view,
       useHeadingEnabled: false,
       goToOverride: function(view, options) {
-          options.target.scale = 1500;
+          options.target.scale = 10000;
           return view.goTo(options.target);
       }
     });
@@ -48,97 +58,157 @@ esriLoader.loadModules([
       view: view,
     });
 
+    const serviceUrl = "http://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer";
     const search = new Search({
       view: view,
-      container: document.getElementById("Tab1")
+      sources: [{
+        url: serviceUrl,
+        countryCode: "US",
+        category: "Address",
+        name: "Search",
+        singleLineFieldName: "SingleLine",
+        maxResults: 1,
+        searchExtent: view.extent,
+        autoSelect: true,
+        popupEnabled: false,
+        showPopupOnSelect: false,
+        visible: false,
+      }],
     });
-
+      
     // Add widgets to map
     view.ui.add(scalebar, "bottom-left");
-    view.ui.add([locate,compass], "top-left");
-    view.ui.add(search, "top-right");
+    view.ui.add([locate, compass], "top-left");
 
-    // Perform wind speed calculations
-    let form = document.querySelector("form");
-    form.addEventListener("submit", (e) => {
-      e.preventDefault(); // Prevent the form from submitting
-      e.stopImmediatePropagation();
-
-      // User Inputs
-      const scenario = document.getElementById("scenario-select").value;
-      const loc = document.getElementById("location-input").value;
-      const lifespan = parseInt(document.getElementById("lifespan-input").value);
-      const buildYear = parseInt(document.getElementById("year-input").value);
-      const riskCat = parseInt(document.getElementById("category-select").value);
-      const method = document.getElementById("method-select").value;
-      const units = document.getElementById("units-select").value;
-
-      // Get relevant feature layer
-      var featureLayer = webmap.allLayers.find(function(featureLayer) {
-        return featureLayer.title === scenario;
+    // Click listener to check for change in tab
+    let openTab;
+    let tabs = document.querySelectorAll(".tablinks");
+    tabs.forEach(function(tab) {
+      tab.addEventListener("click", function() {
+        if (tab !== openTab) {
+          view.graphics.removeAll();
+          openTab = tab;
+        }
       });
+    });
 
-      // Wait for the layer to load
-      featureLayer.load().then(() => {
-        // Create a new query
-        const query = featureLayer.createQuery();
-        query.where =  `county_fips = '${parseInt(loc)}'`
+    const formDiv = document.getElementById("form-div");
+    var loc;
+    
+    // Location search
+    let searchBtn = document.getElementById("search-btn");
+    searchBtn.onclick = (e)=> {
+      e.preventDefault()
+      let el = document.getElementById("input-loc")
+      search.search(el.value);
+    }
+    
+    // Lat/Long Search
+    let searchCoord = document.getElementById("search-latLong-btn"); 
+    searchCoord.onclick = (e)=> {
+      e.preventDefault();
+      let lat = document.getElementById("lat").value;
+      let long = document.getElementById("long").value;
+      let coord = `${lat},${long}`;
+      search.search(coord);
+    }
 
-        // Run the query and return the results
-        featureLayer.queryFeatures(query).then(function(result){
-          if (result.features.length > 0) {
-            var data = result.features[0].attributes;
+    // Map Click
+    view.on("click", clickListener);
+    let searchClick = document.getElementById("tablinksClick");
+    function clickListener(e) {
+      let pt = e.mapPoint;
+      if (searchClick.classList.contains("active")) {
+          search.search(pt)
+      }
+    }
 
-            // Create an empty list to store the field-value pairs
-            const dataList = {};
+    var fipsLayer;
+    webmap.load().then(function() {
+      fipsLayer = webmap.allLayers.find(function(layer) {
+        return layer.title === "USA Census Counties";
+      });
+    });
 
-            // Loop through the properties of the object and add them to the list
-            for (const field in data) {
-              if (data.hasOwnProperty(field)) {
-                dataList[field] = data[field];
-              }
-            }
+    // Get search results
+    // search.on("search-complete", function(event){
+    //   formDiv.classList.remove("hidden");
+    //   loc = event.results[0].results[0].feature;
+    //   console.log(loc)
+    // })
+    search.on("select-result", function(event){
+      view.goTo({
+        scale: 10000
+      });
+      formDiv.classList.remove("hidden");
+      loc = event.result.feature;
 
-            // Calculate design winds
-            let results = winds.calc_winds(dataList, buildYear, riskCat, lifespan, method, units);
-            console.log(results)
-            // Save form HTML and generate table with results
-            table.generateTable(results);
-            
-          } else {
-            alert(`No data was found for location: ${loc}. Please try again with a different location.`)
+      // Perform wind speed calculations
+      let form = document.getElementById("form");
+      form.addEventListener("submit", (e) => {
+        e.stopImmediatePropagation();
+        e.preventDefault(); // Prevent the form from submitting
+
+        // User Inputs
+        const scenario = document.getElementById("scenario-select").value;
+        const lifespan = parseInt(document.getElementById("lifespan-input").value);
+        const buildYear = parseInt(document.getElementById("year-input").value);
+        const riskCat = parseInt(document.getElementById("category-select").value);
+        const method = document.getElementById("method-select").value;
+        const units = document.getElementById("units-select").value;
+
+        // Get FIPS code from search
+        const queryFIPS = fipsLayer.createQuery();
+        queryFIPS.geometry = loc.geometry;
+        queryFIPS.spatialRelationship = "intersects";
+        queryFIPS.outFields = ["FIPS", "NAME"];
+        
+        fipsLayer.queryFeatures(queryFIPS).then(function(response) {
+          if (response.features.length === 0) {
+            alert("Please select a valid location.")
           }
-        })
-      }).catch(error => {
-        console.error("Error loading feature layer:", error);
+          else {
+            const county = response.features[0];
+            loc = county.attributes.FIPS;
+
+            // Get relevant feature layer
+            var featureLayer = webmap.allLayers.find(function(layer) {
+              return layer.title === scenario;
+            });
+
+            // Wait for the layer to load
+            featureLayer.load().then(() => {
+              // Create a new query
+              const query = featureLayer.createQuery();
+              query.where =  `county_fips = '${parseInt(loc)}'`
+
+              // Run the query and return the results
+              featureLayer.queryFeatures(query).then(function(result){
+                if (result.features.length > 0) {
+                  var data = result.features[0].attributes;
+
+                  // Create an empty list to store the field-value pairs
+                  const dataList = {};
+
+                  // Loop through the properties of the object and add them to the list
+                  for (const field in data) {
+                    if (data.hasOwnProperty(field)) {
+                      dataList[field] = data[field];
+                    }
+                  }
+
+                  // Calculate design winds
+                  let results = winds.calc_winds(dataList, buildYear, riskCat, lifespan, method, units);
+                  // Save form HTML and generate table with results
+                  table.generateTable(results);
+                  
+                } else {
+                  alert(`No data was found for ${county.attributes.NAME}. Note: only states along the Gulf and Atlantic Coasts are currently supported. Please try again with a different location.`)
+                }
+              })
+            })
+          }
+        }, { once: true });  
       });
-    }); //, { once: true });
-  }); 
-  
-
-  
-
-  // const serviceUrl = "http://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer";
-  // view.on("click", function(evt){
-  //   const params = {
-  //     location: evt.mapPoint
-  //   };
-
-  //  locator.locationToAddress(serviceUrl, params)
-  //     .then(function(response) { // Show the address found
-  //       const address = response.address;
-  //       console.log(response)
-  //       showAddress(address, evt.mapPoint);
-  //     }, function(err) { // Show no address found
-  //       showAddress("No address found.", evt.mapPoint);
-  //     });
-
-  // });
-
-  // function showAddress(address, pt) {
-  //   view.popup.open({
-  //     title:  + Math.round(pt.longitude * 100000)/100000 + ", " + Math.round(pt.latitude * 100000)/100000,
-  //     content: address,
-  //     location: pt
-  //   });
-  // }
+    });
+  });

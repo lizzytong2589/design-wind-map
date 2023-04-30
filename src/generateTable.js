@@ -1,4 +1,7 @@
 export function goBack() {
+    const locDiv = document.getElementById("location-div");
+    locDiv.classList.remove("hidden");
+
     const formDiv = document.getElementById("form-div");
     formDiv.classList.remove("hidden");
     
@@ -8,6 +11,9 @@ export function goBack() {
 
 export function generateTable(data) {
     // Hide Form
+    const locDiv = document.getElementById("location-div");
+    locDiv.classList.add("hidden");
+
     const formDiv = document.getElementById("form-div");
     formDiv.classList.add("hidden");
 

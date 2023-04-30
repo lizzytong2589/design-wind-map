@@ -4,9 +4,13 @@ html {
   height: 100%;
   width: 100%;
   position: relative;
+  font-family: Arial, sans-serif;
 }
 body {
   overflow: hidden;
+}
+.hidden {
+  display: none;
 }
 .container {
   display: flex;
@@ -14,7 +18,7 @@ body {
   height: 100vh;
 }
 .panel-div {
-  width: 40%;
+  width: 45%;
   padding: 1rem;
   box-sizing: border-box;
   float: left;
@@ -36,25 +40,23 @@ body {
     background-color: #f2f2f2;
 }
 .map {
-  width: 60%;
+  width: 55%;
   height: 100%;
 }
 #viewDiv {
   height: 100%;
 }
 
-/* Style the input groups */
+/* Style the inputs for the form*/
 .input-group {
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
 }
-
 .input-group label {
   font-weight: bold;
   margin-bottom: 5px;
 }
-
 .input-group input,
 .input-group select {
   font-size: 16px;
@@ -69,7 +71,6 @@ body {
   outline: none;
   cursor: pointer;
 }
-
 .input-group select {
   cursor: pointer;
 }
@@ -80,9 +81,9 @@ body {
   font-size: 16px;
   padding: 10px;
   margin: 20px 0;
-  width: 200px;
   color: #fff;
-  background-color: #007
+  background-color: #007;
+  cursor: pointer;
 }
 .back-button {
   background-color: #ffffff;
@@ -94,59 +95,123 @@ body {
   cursor: pointer;
 }
 
+/* Style the back button */
 .back-button:hover {
   background-color: #000000;
   color: #ffffff;
 }
-
 .back-button::before {
   content: '\2190'; /* Unicode value for left arrow */
   display: inline-block;
   margin-right: 8px;
 }
-.hidden {
-  display: none;
-}
 
-/* Location panel */
-#location-panel {
-  padding: 20px;
+/* Tabs Panel */
+.location-box {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 400px;
+  margin-bottom: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #f9f9f9;
-  margin-bottom: 20px;
+  padding: 15px;
+}
+.loc{
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  flex-wrap: nowrap;
 }
 .tab {
   overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  flex-direction: row;
 }
-
 .tab button {
   background-color: inherit;
-  float: left;
-  border: none;
+  border: 1px solid #ccc;
   outline: none;
   cursor: pointer;
   padding: 14px 16px;
   transition: 0.3s;
+  flex: 1;
 }
-
 .tab button:hover {
   background-color: #ddd;
 }
-
 .tab button.active {
   background-color: #ccc;
 }
-
 .tabcontent {
   display: none;
   padding: 6px 12px;
-  border: 1px solid #ccc;
   border-top: none;
 }
-
 .tabcontent.show {
-  display: block;
+  display: flex;
+  flex: 1;
 }
+
+/* Tabs */
+.search-bar {
+  display: flex;
+  flex: .9;
+  margin: 0 auto;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+}
+
+#input-loc {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  padding: 10px;
+  background-color: transparent;
+}
+
+.search{
+  border: none;
+  outline: none;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 20px;
+  margin-left: 10px;
+  color: white;
+  background-color: #777777;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+#search-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+  background-color: #777777;
+} 
+
+.latLong-container {
+  display: flex;
+  flex: 1;
+  width: 95%;
+  margin: 0 auto;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.latLong-bar {
+  flex: 1;
+  width: 98%;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  padding: 10px;
+  background-color: #f2f2f2;
+  box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+}
+
+

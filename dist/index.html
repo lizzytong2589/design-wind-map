@@ -25,6 +25,10 @@
       document.getElementById(tabName).classList.add("show");
       evt.currentTarget.classList.add("active");
     }
+    // have first tab active by default
+    window.onload = function() {
+      document.getElementsByClassName("tablinks")[0].click();
+    }
   </script>
   <div class="container">
     <div class="panel-div" id="panel-div">
@@ -54,37 +58,36 @@
         </tbody></table>
       </div>
 
-      <div id="form-div">
-        <form id="form">
-          <div class="input-group">
-            <label for="location-input">Enter Location:</label><br>
-            <input type="text" id="location-input" pattern="\d{5}" placeholder="e.g. 01001" required>
-          </div>
-          <!-- <div class="input-group" id="location-panel">
-            <label for="location-input">Select Location:</label><br>
+      <div id="location-div">
+        <label for="loc-box-div" style="font-weight: bold; margin-bottom: 5px;">Select Location:</label><br>
+        <div id="loc-box-div" style="display:flex; width: 100%;">
+          <div class="location-box" id="location-panel">
             <div class="tab">
-              <button class="tablinks" onclick="openTab(event, 'Tab1')">Address</button>
-              <button class="tablinks" onclick="openTab(event, 'Tab2')">Lat/Long</button>
-              <button class="tablinks" onclick="openTab(event, 'Tab3')">Select on Map</button>
+              <button id="tablinksSearch" class="tablinks" onclick="openTab(event, 'Tab1')">Address</button>
+              <button id="tablinksLatLong" class="tablinks" onclick="openTab(event, 'Tab2')">Lat/Long</button>
+              <button id="tablinksClick" class="tablinks" onclick="openTab(event, 'Tab3')">Select on Map</button>
             </div>
-            <div id = ""></div>
-          </div> -->
-          <div id="Tab1" class="tabcontent">
-            <h3>Tab 1 Content</h3>
-            <p>This is the content for Tab 1.</p>
+            <div id="Tab1" class="tabcontent loc">
+              <form class = "search-bar">
+                <input type="text" id="input-loc" placeholder="Enter an address or place">
+                <input id="search-btn" class="search" type="submit" value="Search">
+              </form>
+            </div>
+            <div id="Tab2" class="tabcontent loc">
+              <form class="latLong-container">
+                <input type="text" class="latLong-bar" id="lat" placeholder="Lat" style="margin-right:5%;">
+                <input type="text" class="latLong-bar" id="long" placeholder="Long">
+                <input id="search-latLong-btn" class="search" type="submit" value="Search"> 
+              </form> 
+            </div>
+            <div id="Tab3" class="tabcontent loc">
+              <p>Click on map to select location.</p>
+            </div>
           </div>
-          
-          <div id="Tab2" class="tabcontent">
-            <h3>Tab 2 Content</h3>
-            <p>This is the content for Tab 2.</p>
-          </div>
-          
-          <div id="Tab3" class="tabcontent">
-            <h3>Tab 3 Content</h3>
-            <p>This is the content for Tab 3.</p>
-          </div>
-          
-          <!-- Other inputs -->
+        </div>
+      </div>
+      <div id="form-div" class="hidden">
+        <form id="form">
           <div class="input-group">
             <label for="scenario-select">Emissions Scenario:</label><br>
             <select id="scenario-select" required>
