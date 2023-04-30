@@ -111,9 +111,8 @@ esriLoader.loadModules([
     searchCoord.onclick = (e)=> {
       e.preventDefault();
       search.clear();       // Clear previous search result
-  
-      let lat = document.getElementById("lat").value;
-      let long = document.getElementById("long").value;
+      let lat = Math.round(100 * document.getElementById("lat").value) / 100;
+      let long = Math.round(100 *document.getElementById("long").value) / 100;
       let coord = `${lat},${long}`;
       search.search(coord);
     }
@@ -138,11 +137,6 @@ esriLoader.loadModules([
     });
 
     // Get search results
-    // search.on("search-complete", function(event){
-    //   formDiv.classList.remove("hidden");
-    //   loc = event.results[0].results[0].feature;
-    //   console.log(loc)
-    // })
     search.on("select-result", function(event){
       view.goTo({
         scale: 10000
