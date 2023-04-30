@@ -200,9 +200,10 @@ esriLoader.loadModules([
 
                   // Calculate design winds
                   let results = winds.calc_winds(dataList, buildYear, riskCat, lifespan, method, units);
+
                   // Save form HTML and generate table with results
                   table.generateTable(results);
-                  view.graphics.removeAll();
+                  // view.graphics.removeAll();
                   
                 } else {
                   alert(`No data was found for ${county.attributes.NAME}. Note: only states along the Gulf and Atlantic Coasts are currently supported. Please try again with a different location.`)
