@@ -1,9 +1,6 @@
 export function goBack() {
     const locDiv = document.getElementById("location-div");
     locDiv.classList.remove("hidden");
-
-    const formDiv = document.getElementById("form-div");
-    formDiv.classList.remove("hidden");
     
     const tableDiv = document.getElementById("table-div");
     tableDiv.classList.add("hidden");

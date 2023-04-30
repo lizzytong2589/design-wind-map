@@ -71,9 +71,10 @@ esriLoader.loadModules([
         searchExtent: view.extent,
         autoSelect: true,
         visible: false,
+        exactMatch: false,
       }],
       popupEnabled: false,
-      showPopupOnSelect: false,
+      // showPopupOnSelect: false,
     });
       
     // Add widgets to map
@@ -99,6 +100,8 @@ esriLoader.loadModules([
     let searchBtn = document.getElementById("search-btn");
     searchBtn.onclick = (e)=> {
       e.preventDefault()
+      search.clear();       // Clear previous search result
+
       let el = document.getElementById("input-loc")
       search.search(el.value);
     }
@@ -107,6 +110,8 @@ esriLoader.loadModules([
     let searchCoord = document.getElementById("search-latLong-btn"); 
     searchCoord.onclick = (e)=> {
       e.preventDefault();
+      search.clear();       // Clear previous search result
+  
       let lat = document.getElementById("lat").value;
       let long = document.getElementById("long").value;
       let coord = `${lat},${long}`;
@@ -117,6 +122,8 @@ esriLoader.loadModules([
     view.on("click", clickListener);
     let searchClick = document.getElementById("tablinksClick");
     function clickListener(e) {
+      search.clear();       // Clear previous search result
+
       let pt = e.mapPoint;
       if (searchClick.classList.contains("active")) {
           search.search(pt)
@@ -201,6 +208,7 @@ esriLoader.loadModules([
                   let results = winds.calc_winds(dataList, buildYear, riskCat, lifespan, method, units);
                   // Save form HTML and generate table with results
                   table.generateTable(results);
+                  view.graphics.removeAll();
                   
                 } else {
                   alert(`No data was found for ${county.attributes.NAME}. Note: only states along the Gulf and Atlantic Coasts are currently supported. Please try again with a different location.`)
